@@ -3,6 +3,7 @@ import argparse
 import requests
 from bs4 import BeautifulSoup
 import os
+import re
 
 def scrape_contract_files(address):
     url = f"https://etherscan.io/address/{address}#code"
@@ -36,6 +37,19 @@ def scrape_contract_files(address):
             if pre_tag:
                 code_text = pre_tag.get_text()
                 files.append((file_name, code_text))
+    
+    if not files:
+        # Handle single contract file case
+        pre_tag = soup.find("pre", id="editor")
+        if pre_tag:
+            code = pre_tag.get_text()
+            match = re.search(r'contract\s+(\w+)\s', code, re.MULTILINE)
+            if match:
+                file_name = f"{match.group(1)}.sol"
+            else:
+                file_name = "Contract.sol"
+            files.append((file_name, code))
+    
     return files
 
 def main():

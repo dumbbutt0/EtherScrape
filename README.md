@@ -14,7 +14,7 @@
 - Accepts a single address or a list of addresses to grab all Solidity files in a contract.  
 - Works across multiple websites (see list below).  
 - Separates and filters addresses for better organization.  
-- (**COMING SOON**) Additional advanced features.  
+- (**COMING SOON**)🤫
 
 ---
 
@@ -39,43 +39,42 @@
 
 ---
 
-## Working & Non-Working Sites
+## Site compatibility
 
-### ✅ Sites That Returned Files (Worked)
-- https://bscscan.com/  
-- https://etherscan.io/  
-- https://optimistic.etherscan.io/  
-- https://sepolia-optimism.etherscan.io/  
-- https://polygonscan.com/  
-- https://sepolia.arbiscan.io/  
-- https://arbiscan.io/  
-- https://testnet.bscscan.com/ *(sometimes 1 file, sometimes 7 files)*  
-- https://nova.arbiscan.io/  
-- https://basescan.org/  
-- https://zkevm.polygonscan.com/  
-- https://lineascan.build/  
-- https://sepolia.basescan.org/  
-- https://sepolia.etherscan.io/  
+### ✅ Working Sites
+| Site | Status |
+|------|--------|
+| https://bscscan.com/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://etherscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://optimistic.etherscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://sepolia-optimism.etherscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://polygonscan.com/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://sepolia.arbiscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://arbiscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://testnet.bscscan.com/ | ![Intermittent](https://img.shields.io/badge/Status-⚡-yellow) |
+| https://nova.arbiscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://basescan.org/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://zkevm.polygonscan.com/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://lineascan.build/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://sepolia.basescan.org/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
+| https://sepolia.etherscan.io/ | ![Working](https://img.shields.io/badge/Status-✅-brightgreen) |
 
-### ❌ Sites That Never Returned Files (Always Failed / 403 or Forbidden)
-- https://opbnb.bscscan.com/  
-- https://celoscan.io/  
-- https://testnet.bttcscan.com/  
-- https://bttcscan.com/  
-- https://moonriver.moonscan.io/  
-- https://moonscan.io/  
-- https://moonbase.moonscan.io/  
-- https://alfajores.celoscan.io/  
-- https://gnosisscan.io/  
-- https://uniscan.xyz/  
-- https://sepolia.blastscan.io/  
-- https://scrollscan.com/  
-- https://fraxscan.com/  
-- https://blastscan.io/  
-- https://holesky.fraxscan.com/  
-- https://sepolia.scrollscan.com/  
-
-
-   
-   
-   
+### ❌ Non-Working Sites
+| Site | Status |
+|------|--------|
+| https://opbnb.bscscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://celoscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://testnet.bttcscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://bttcscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://moonriver.moonscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://moonscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://moonbase.moonscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://alfajores.celoscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://gnosisscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://uniscan.xyz/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://sepolia.blastscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://scrollscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://fraxscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://blastscan.io/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://holesky.fraxscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |
+| https://sepolia.scrollscan.com/ | ![Fail](https://img.shields.io/badge/Status-❌-red) |

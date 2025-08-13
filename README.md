@@ -1,5 +1,20 @@
 # EtherScrape
-**Etherscan scraping tool for Solidity files**  
+**Etherscan scraping tool created by [DumbButt0](https://x.com/dumbButt0)**  
+
+
+## Usage
+
+Example (multiple addresses from file):
+
+    etherscrape.rs addresses.txt ./out_dir      
+Example (single address):
+
+    etherscrape.rs 0x69e9041bde787979d6f7e972716f30d38dc799b0 ./out_dir
+    
+Example (single address):
+
+    etherscrape.rs 0x69e9041bde787979d6f7e972716f30d38dc799b0 
+  **NOTE: Without `out_dir` the dir will be the scraped contract name+suffix**
 
 ---
 

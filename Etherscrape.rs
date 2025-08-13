@@ -9,19 +9,29 @@ use std::process;
 use std::env;
 
 
-//step 1: learn to make request (https://sepolia.etherscan.io/address/0x69e9041bde787979d6f7e972716f30d38dc799b0#code)
+//step 1: learn to make request (https://etherscan.io/address/0x460fad03099f67391d84c9cc0ea7aa2457969cea#code)
 async fn get_page(address:&str) -> Result<String,reqwest::Error>{
     let address = address.trim();
     let url = format!("https://etherscan.io/address/{address}#code");
-    let body = reqwest::get(url).await?.text().await?;
+    // Add User-Agent to avoid 403
+    let client = reqwest::Client::builder()
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+        .build()?;
+    let body = client.get(url).send().await?.text().await?;
     Ok(body)
 }
 
 //step 2: parse html into vector tuples (filename,code)
-fn parse_code(html: &str) -> Result<Vec<(String, String)>, Box<dyn Error>> {
+fn parse_code(html: &str) -> Result<(Vec<(String, String)>, Option<String>), Box<dyn Error>> {
     let docs: Html = Html::parse_document(html);
     let div_selector = Selector::parse(r#"div.d-flex.justify-content-between"#)?;
     let span_selector = Selector::parse("span.text-muted")?;
+
+    // Extract contract name from span to save as dir
+    let name_selector = Selector::parse("span.h6.fw-bold.mb-0")?;
+    let contract_name_opt = docs.select(&name_selector).next().map(|span| {
+        span.text().collect::<String>().trim().to_string()
+    }).filter(|name| !name.is_empty());
 
     let mut files = Vec::new();
 
@@ -46,9 +56,38 @@ fn parse_code(html: &str) -> Result<Vec<(String, String)>, Box<dyn Error>> {
             }
         }
     }
-    Ok(files)
-}
 
+    // Fallback for single-file contracts
+    if files.is_empty() {
+        let mut file_name = "Contract.sol".to_string();
+        if let Some(ref name) = contract_name_opt {
+            file_name = format!("{}.sol", name);
+        }
+
+        // Extract code from ACE editor if present
+        let ace_layer_selector = Selector::parse(".ace_text-layer")?;
+        let mut code = String::new();
+        if let Some(ace_layer) = docs.select(&ace_layer_selector).next() {
+            let line_selector = Selector::parse(".ace_line")?;
+            let mut code_lines = Vec::new();
+            for line in ace_layer.select(&line_selector) {
+                let line_text: String = line.text().collect();
+                code_lines.push(line_text);
+            }
+            code = code_lines.join("\n");
+        } else {
+            // Fallback to plain <pre> tag
+            let pre_selector = Selector::parse("pre")?;
+            if let Some(pre) = docs.select(&pre_selector).next() {
+                code = pre.text().collect::<String>();
+            }
+        }
+        files.push((file_name, code));
+    }
+
+    Ok((files, contract_name_opt))
+}
+//create paths based on contract names and saves files accordingly
 async fn save_file(dir: &str, files: &[(String, String)]) -> Result<(), Box<dyn Error>> {
     if !Path::new(dir).exists() {
         fs::create_dir_all(dir).await?;
@@ -107,7 +146,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
         println!("{HELP_DOCS}");
         process::exit(0);
     }
-
     let input = &args[1];
     let single = input.len() == 42 && input.starts_with("0x");
 
@@ -142,8 +180,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
             }
         };
 
-        let files = match parse_code(&page) {
-            Ok(f) => f,
+        let (mut files, contract_name_opt) = match parse_code(&page) {
+            Ok((f, n)) => (f, n),
             Err(e) => {
                 eprintln!("Failed to parse {}: {}", &addy, e);
                 continue;
@@ -156,13 +194,17 @@ async fn main() -> Result<(), Box<dyn Error>> {
         } else {
             &addy
         };
+        let mut dir_base = contract_name_opt.unwrap_or(base_dir.clone());
 
-        let out_dir = format!("{}_{}", base_dir, suffix);
+        // For single-file, if span not found but name extracted from code, use that
+        if files.len() == 1 && dir_base == base_dir {
+            dir_base = files[0].0.trim_end_matches(".sol").to_string();
+        }
 
+        let out_dir = format!("{}_{}", dir_base, suffix);
         if let Err(e) = save_file(&out_dir, &files).await {
             eprintln!("Failed to save files for {}: {}", &addy, e);
         }
     }
-
     Ok(())
 }
